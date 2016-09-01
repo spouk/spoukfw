@@ -46,24 +46,3 @@ func (mail MailMessage) MailSend(message *MailMessage) (error) {
 	}
 	return nil
 }
-//func main(){
-//	m:=new(MailMessage)
-//	m.Message = "Test message for example"
-//	m.From = "spouk@rdba.ru"
-//	m.To = "cyberspouk@gmail.com"
-//
-//	m.Subject = "Simple subject message testing"
-//	m.Username = "spouk"
-//	m.Password = "spouk"
-//	m.Host = "rdba.ru"
-//	m.Port = 25
-//
-//	err:= MailSend(m)
-//	if err != nil {
-//		fmt.Printf(err.Error())
-//	}
-//
-//}
-
-
-
