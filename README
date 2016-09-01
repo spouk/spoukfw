@@ -1,0 +1,5 @@
+[go] A simple framework for Golang 1.7 - with new cheat - inject `context` in http.Request, Great Tip.
+The project is conditional finished, is not covered by the tests, 
+partially tested under load, good performance. As I used httprouter multiplexer.
+
+
