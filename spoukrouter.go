@@ -9,6 +9,8 @@ import (
 //"reflect"
 	"log"
     
+"runtime"
+	"reflect"
 )
 
 type (
@@ -66,8 +68,8 @@ func (sr *spoukrouter) fixPrefix(prefix string) string {
 	return prefix
 }
 func (sr *spoukrouter) addRoute(method, path, prefix string, s SpoukHandler) {
-	//nameHandler := runtime.FuncForPC(reflect.ValueOf(s).Pointer()).Name()
-	//sr.spoukmux.RouteMapper[prefix + path] = spoukMapRoute{Path:prefix + path, Method:method, Handler:nameHandler}
+	nameHandler := runtime.FuncForPC(reflect.ValueOf(s).Pointer()).Name()
+	sr.spoukmux.RouteMapper[prefix + path] = spoukMapRoute{Path:prefix + path, Method:method, Handler:nameHandler}
 	//prefixMiddle
 	hu := sr.middlewares.getStockMiddlesPrefix(sr.fixPrefix(prefix)).wrappermidfunc(s)
 	sr.router.Handle(strings.ToUpper(method), prefix + path, httprouter.Handle(func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -98,6 +100,7 @@ func (sr *spoukrouter) Multi(methods []string, path string, s SpoukHandler) {
 	}
 }
 func (sr *spoukrouter) Get(path string, s SpoukHandler) {
+	sr.spoukmux.RouteMapper
 	sr.addRoute("GET", path, "", s)
 }
 func (sr *spoukrouter) Post(path string, s SpoukHandler) {
