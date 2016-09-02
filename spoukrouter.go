@@ -100,7 +100,6 @@ func (sr *spoukrouter) Multi(methods []string, path string, s SpoukHandler) {
 	}
 }
 func (sr *spoukrouter) Get(path string, s SpoukHandler) {
-	sr.spoukmux.RouteMapper
 	sr.addRoute("GET", path, "", s)
 }
 func (sr *spoukrouter) Post(path string, s SpoukHandler) {
