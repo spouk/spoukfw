@@ -2,7 +2,7 @@ package spoukfw
 
 import (
 	"net/http"
-	"github.com/julienschmidt/httprouter"
+	"./httprouter"
 	"golang.org/x/net/context"
 	"net/url"
 	"time"
@@ -14,17 +14,19 @@ type (
 	SpoukCarry struct {
 		response *http.ResponseWriter
 		request  *http.Request
-		spoukmux *Spoukmux
 		params   *httprouter.Params
 		Spoukmux *Spoukmux
 	}
 )
+func (m *SpoukCarry) RealPath() string{
+	return m.Spoukmux.router.LookupRoute(m.request.Method, m.request.URL.Path)
+}
 
 func (m *SpoukCarry) Config() *Spoukconfig {
-	return m.spoukmux.config
+	return m.Spoukmux.config
 }
 func (m *SpoukCarry) Render(name string, data interface{}) error{
-	m.spoukmux.render.SpoukRenderIO(name, data, *m.response, m.spoukmux.config.TemplateDebug)
+	m.Spoukmux.render.SpoukRenderIO(name, data, *m.response, m.Spoukmux.config.TemplateDebug)
 	return nil
 }
 func (sr *SpoukCarry) Request() *http.Request {
@@ -113,5 +115,5 @@ func (sr *SpoukCarry) SetCook(c http.Cookie) {
 	http.SetCookie(*sr.response, _newCook)
 }
 func (s *SpoukCarry) ShowMiddlwaresAndSession() {
-	fmt.Sprintf("[middlewares]%v\n[session] `%v`\n[sessionobject] `%v`\n", s.spoukmux.middlewares, s.spoukmux.session, s.spoukmux.session.SessionObject)
+	fmt.Sprintf("[middlewares]%v\n[session] `%v`\n[sessionobject] `%v`\n", s.Spoukmux.middlewares, s.Spoukmux.session, s.Spoukmux.session.SessionObject)
 }

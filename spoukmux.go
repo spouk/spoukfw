@@ -12,7 +12,7 @@ import (
 const (
 	prefixSpoukMix = "[spoukmix][logger]"
 	defaultErrorMsgSpoukMux = "[spoukmux][error] `%v`"
-//errors spoukmux
+	//errors spoukmux
 	errorSessionObject = "не найден объект сессии, надо подключить"
 )
 
@@ -47,10 +47,9 @@ func (m *Spoukmux) SetStockHandlerStock(stock SpoukHandlerStock) {
 }
 func (m *Spoukmux) ShowRoutingMap() {
 	for _, x := range m.RouteMapper {
-		fmt.Printf("[spoukmux] [%7s] `%20s`  `%+v`\n", x.Method, x.Path, x.Handler)
+		fmt.Printf("[spoukmux] [%7s] `%20s`  `%+v`   `%v`\n", x.Method, x.Path, x.Handler, x.HandlerX)
 	}
 }
-
 func (m *Spoukmux) SetRender(r SpoukMuxRendering) {
 	m.render = r
 }
@@ -73,8 +72,6 @@ func (m *Spoukmux) putPool(res *SpoukCarry) {
 func (m *Spoukmux) StaticFiles(realpath, wwwpath string) {
 	m.router.StaticFiles(realpath, wwwpath)
 }
-//router.ServeFiles("/src/*filepath", http.Dir("/var/www"))
-
 func (s *Spoukmux) catchErrors() {
 	log.Printf("[spoukmux][catcher-errros]\n")
 }
@@ -111,8 +108,9 @@ func NewSpoukmux(spcfg *Spoukconfig) *Spoukmux {
 	m := Spoukmux{
 		pool:   sync.Pool{},
 		config:spcfg,
-		router:&spoukrouter{},
+		router:newSpoukRouter(),
 	}
+	m.router.spoukmux = &m
 	m.middlewares = make(spoukstockmiddlewares)
 	m.middlewares.setStockMiddlePrefix("", loggerMiddleware)
 	m.router.middlewares = &m.middlewares
@@ -132,7 +130,7 @@ func NewSpoukmux(spcfg *Spoukconfig) *Spoukmux {
 	m.router.router.RedirectTrailingSlash = true
 	m.pool.New = func() interface{} {
 		return &SpoukCarry{
-			spoukmux: &m,
+			Spoukmux: &m,
 			request: &http.Request{},
 		}
 	}

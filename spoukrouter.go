@@ -1,15 +1,12 @@
 package spoukfw
 
 import (
-	"github.com/julienschmidt/httprouter"
+	"./httprouter"
 	"net/http"
 	"fmt"
 	"strings"
-//"runtime"
-//"reflect"
 	"log"
-    
-"runtime"
+	"runtime"
 	"reflect"
 )
 
@@ -22,9 +19,10 @@ type (
 	}
 	SpoukHandler func(*SpoukCarry) error
 	spoukMapRoute struct {
-		Path    string
-		Method  string
-		Handler string
+		Path     string
+		Method   string
+		Handler  string
+		HandlerX string
 	}
 )
 
@@ -37,9 +35,8 @@ var (
 	}
 )
 
-func newSpoukRouter(mux *Spoukmux) *spoukrouter {
+func newSpoukRouter() *spoukrouter {
 	sp := &spoukrouter{
-		spoukmux:mux,
 		router:httprouter.Router{HandleMethodNotAllowed:true, RedirectFixedPath:true, RedirectTrailingSlash:true},
 	}
 	return sp
@@ -54,7 +51,6 @@ func (sr *spoukrouter) StaticFiles(realpath, wwwpath string) {
 func (sr spoukrouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	sr.router.ServeHTTP(w, r)
 }
-
 func (sr *spoukrouter) fixPrefix(prefix string) string {
 	//убирает слеш последний заебанный
 	if len(strings.TrimSpace(prefix)) == 1 && prefix == "/" {
@@ -69,10 +65,10 @@ func (sr *spoukrouter) fixPrefix(prefix string) string {
 }
 func (sr *spoukrouter) addRoute(method, path, prefix string, s SpoukHandler) {
 	nameHandler := runtime.FuncForPC(reflect.ValueOf(s).Pointer()).Name()
-	sr.spoukmux.RouteMapper[prefix + path] = spoukMapRoute{Path:prefix + path, Method:method, Handler:nameHandler}
+	sr.spoukmux.RouteMapper[prefix + path] = spoukMapRoute{Path:prefix + path, Method:method, Handler:nameHandler, HandlerX:fmt.Sprintf("%x", s)}
 	//prefixMiddle
 	hu := sr.middlewares.getStockMiddlesPrefix(sr.fixPrefix(prefix)).wrappermidfunc(s)
-	sr.router.Handle(strings.ToUpper(method), prefix + path, httprouter.Handle(func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	wrapHandle := httprouter.Handle(func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		newcarry := sr.spoukmux.getPool(w, r)
 		newcarry.params = &ps
 		//if sr.spoukmux.handlers != nil {
@@ -81,7 +77,8 @@ func (sr *spoukrouter) addRoute(method, path, prefix string, s SpoukHandler) {
 		//sr.wrapperForStockInitInterface(hu)(newcarry)
 		hu(newcarry)
 		sr.spoukmux.putPool(newcarry)
-	}))
+	})
+	sr.router.Handle(strings.ToUpper(method), prefix + path, wrapHandle)
 }
 func (sr *spoukrouter) checkMethod(method string) bool {
 	if _, found := validMethods[method]; found {
