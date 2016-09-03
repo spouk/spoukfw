@@ -2,7 +2,7 @@ package spoukfw
 
 import (
 	"net/http"
-	"./httprouter"
+	"github.com/spouk/spoukfw/httprouter"
 	"golang.org/x/net/context"
 	"net/url"
 	"time"
