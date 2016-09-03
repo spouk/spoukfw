@@ -177,10 +177,6 @@ func (ss spoukstockmiddlewares) setStockMiddlePrefix(prefix string, m ...Midfunc
 		}
 	}
 
-	//общая часть
-	//исключаю initStockMiddleware функцию
-	//tmp = parseinitFuncMidleware(stock)
-	//добавляю новые к имеющимся
 	for _, x := range m {
 		stock = append(stock, x)
 		//nameHandler := runtime.FuncForPC(reflect.ValueOf(x).Pointer()).Name()
@@ -188,8 +184,5 @@ func (ss spoukstockmiddlewares) setStockMiddlePrefix(prefix string, m ...Midfunc
 		//	tmp = append(tmp, x)
 		//}
 	}
-	//добавляю в последнюю очередь мидд initStockMiddleware
-	//tmp = append(tmp, initFuncMidleware)
-	//добавляю итог к префикусу в общую кучу
 	ss[realprefix] = stock
 }
