@@ -113,7 +113,7 @@ func sessionMiddleware(h SpoukHandler) SpoukHandler {
 	fu := SpoukHandler(func(c *SpoukCarry) error {
 		//fmt.Printf("[sessionMiddleware] run...\n")
 
-		s := c.spoukmux.session
+		s := c.Spoukmux.session
 		if s.SessionObject != nil {
 			//start := time.Now()
 			//создание нового динамического объекта для передачи по контексту
@@ -126,7 +126,7 @@ func sessionMiddleware(h SpoukHandler) SpoukHandler {
 		} else {
 			log.Printf(infoLoggerApp, fmt.Sprintf("[spouksession] не найден `SpoukSessionObject`"))
 		}
-		//s := &SessObj{Spoukmux:c.spoukmux, SpoukCarry:c}
+		//s := &SessObj{Spoukmux:c.Spoukmux, SpoukCarry:c}
 		//c.Set("sos", s)
 		h(c)
 		return nil
@@ -135,8 +135,8 @@ func sessionMiddleware(h SpoukHandler) SpoukHandler {
 }
 func initFuncMidleware(h SpoukHandler) SpoukHandler {
 	fu := SpoukHandler(func(c *SpoukCarry) error {
-		if c.spoukmux.handlers != nil {
-			c.spoukmux.handlers.StockInit(c)
+		if c.Spoukmux.handlers != nil {
+			c.Spoukmux.handlers.StockInit(c)
 		}
 		//fmt.Printf("[wrapperForStockInitInterface] run...\n")
 		h(c)
