@@ -1,7 +1,7 @@
 package spoukfw
 
 import (
-	"./httprouter"
+	"github.com/spouk/spoukfw/httprouter"
 	"net/http"
 	"fmt"
 	"strings"
