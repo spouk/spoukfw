@@ -19,7 +19,8 @@ type (
 	}
 )
 func (m *SpoukCarry) RealPath() string{
-	return m.Spoukmux.router.router.LookupRoute(m.request.Method, m.request.URL.Path)
+	_, rp,_, _ := m.Spoukmux.router.router.LookupRoute(m.request.Method, m.request.URL.Path)
+	return rp
 }
 
 func (m *SpoukCarry) Config() *Spoukconfig {
