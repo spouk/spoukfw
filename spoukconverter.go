@@ -97,3 +97,11 @@ func (c *SpoukConverter) checkValue(value interface{}) bool {
 	c.logger.Printf(makeErrorMessage(defConverter, ErrorValueNotValidConvert).Error())
 	return false
 }
+func (c *SpoukConverter) DirecttStringtoInt64(v string) int64 {
+	if res, err := strconv.Atoi(v); err != nil {
+		c.logger.Printf(makeErrorMessage(defConverter, err.Error()).Error())
+		return 0
+	} else {
+		return int64(res)
+	}
+}
