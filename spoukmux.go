@@ -33,6 +33,7 @@ type (
 		SpoukRenderIO(name string, data interface{}, resp http.ResponseWriter, reloadTemplate bool) (err error)
 		AddUserFilter(name string, f interface{})
 		AddFilters(stack map[string]interface{})
+		ReloadTemplate()
 	}
 //интерфейс для стека обработчиков
 	SpoukHandlerStock interface {
@@ -78,7 +79,8 @@ func (s *Spoukmux) catchErrors() {
 	log.Printf("[spoukmux][catcher-errros]\n")
 }
 func (s *Spoukmux) Run() {
-
+	//reload template для парсинга шаблонов
+	s.render.ReloadTemplate()
 	defer s.catchErrors()
 	srv := http.Server{
 		Addr:         s.config.Address,
@@ -114,7 +116,6 @@ func NewSpoukmux(spcfg *Spoukconfig) *Spoukmux {
 	m.middlewares = make(spoukstockmiddlewares)
 	m.middlewares.setStockMiddlePrefix("", loggerMiddleware)
 	m.router.middlewares = &m.middlewares
-
 	m.RouteMapper = make(map[string]spoukMapRoute)
 	if m.config.UseSession {
 		m.session = newSpoukSession(&m)

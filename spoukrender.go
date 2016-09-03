@@ -48,13 +48,6 @@ type (
 
 	}
 )
-
-//---------------------------------------------------------------------------
-//  testing
-//---------------------------------------------------------------------------
-func (s *SpoukRender) TestingWriteStr(str string, w http.ResponseWriter) {
-	w.Write([]byte("[SPOUKRENDER] " + str))
-}
 func NewSpoukRender(path string, debug bool) *SpoukRender {
 	//создаю стек для дефолтных функций
 	sf := new(SpoukRender)
@@ -63,7 +56,7 @@ func NewSpoukRender(path string, debug bool) *SpoukRender {
 	sf.Path = path
 	sf.Debug = debug
 	defer sf.catcherPanic()
-	sf.Temp = template.Must(template.New("spoukindex").Funcs(sf.FIlters).ParseGlob(sf.Path))
+	//sf.Temp = template.Must(template.New("spoukindex").Funcs(sf.FIlters).ParseGlob(sf.Path))
 	return sf
 }
 func (s *SpoukRender) catcherPanic() {
@@ -72,12 +65,13 @@ func (s *SpoukRender) catcherPanic() {
 		log.Printf(fmt.Sprintf(ErrorCatcherPanic, msgPanic))
 	}
 }
-func (s *SpoukRender) reloadTemplate() {
+func (s *SpoukRender) ReloadTemplate() {
 	defer s.catcherPanic()
 	if s.Debug {
 		s.Temp = template.Must(template.New("spoukindex").Funcs(s.FIlters).ParseGlob(s.Path))
 	}
 }
+
 func (s *SpoukRender) HTMLTrims(body []byte) []byte {
 	result := []string{}
 	for _, line := range strings.Split(string(body), "\n") {
@@ -90,13 +84,8 @@ func (s *SpoukRender) HTMLTrims(body []byte) []byte {
 func (s *SpoukRender) SpoukRenderIO(name string, data interface{}, w http.ResponseWriter, reloadTemplate bool) (err error) {
 	defer s.catcherPanic()
 	if reloadTemplate {
-		s.reloadTemplate()
+		s.ReloadTemplate()
 	}
-	//if err := s.Temp.ExecuteTemplate(w, name, data); err != nil {
-	//	log.Printf(err.Error())
-	//	return err
-	//}
-
 	buf := new(bytes.Buffer)
 
 	if err = s.Temp.ExecuteTemplate(buf, name, data); err != nil {
@@ -114,7 +103,7 @@ func (s *SpoukRender) SpoukRenderIO(name string, data interface{}, w http.Respon
 }
 func (s *SpoukRender) Render(w io.Writer, name string, data interface{}) error {
 	defer s.catcherPanic()
-	s.reloadTemplate()
+	s.ReloadTemplate()
 	if err := s.Temp.ExecuteTemplate(w, name, data); err != nil {
 		log.Printf(err.Error())
 		return err
@@ -125,7 +114,6 @@ func (s *SpoukRender) AddUserFilter(name string, f interface{}) {
 	s.FIlters[name] = f
 }
 func (s *SpoukRender) AddFilters(stack map[string]interface{}) {
-	fmt.Printf("[RENDER] call AddFilters\n")
 	for k, v := range stack {
 		s.FIlters[k] = v
 	}
@@ -133,9 +121,6 @@ func (s *SpoukRender) AddFilters(stack map[string]interface{}) {
 func (s *SpoukRender) ShowStack() {
 	fmt.Println(s.FIlters)
 }
-//---------------------------------------------------------------------------
-//  функции из spoukmux
-//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 //  рандомные полезные функции для шаблонов

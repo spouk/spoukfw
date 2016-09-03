@@ -53,6 +53,8 @@ func (c *SpoukConverter) stringToInt64() {
 	c.stringToInt()
 	if c.result != nil {
 		c.result = int64(c.result.(int))
+	} else {
+		c.result = nil
 	}
 }
 //---------------------------------------------------------------------------
