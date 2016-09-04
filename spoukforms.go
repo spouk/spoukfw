@@ -140,6 +140,15 @@ var (
 //---------------------------------------------------------------------------
 //  functions
 //---------------------------------------------------------------------------
+func (b *SpoukForm)ResetForm() {
+	b.Errors = make(map[string]string)
+	b.Class = make(map[string]string)
+	b.Desc = make(map[string]string)
+	b.Stack = make(map[string]interface{})
+}
+func (b *SpoukForm)AddForm(name string, form DefaultForm) {
+	b.DefaultForm[name] = form
+}
 func (b *SpoukForm)resetErrors() {
 	b.Errors = make(map[string]string)
 }
