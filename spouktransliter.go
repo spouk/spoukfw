@@ -24,7 +24,6 @@ func NewSpoukTransliter() *SpoukTransliter {
 
 	n.InValid = append(n.InValid, n.convert(91, 96)...)
 	n.InValid = append(n.InValid, n.convert(58, 64)...)
-	n.InValid = append(n.InValid, n.convert(48, 57)...)
 	n.InValid = append(n.InValid, n.convert(33, 47)...)
 	n.InValid = append(n.InValid, n.convert(33, 47)...)
 	n.Replacer = n.convert(32, 32)
@@ -73,6 +72,8 @@ func (s *SpoukTransliter) TransliterCyr(str string) string {
 			result = append(result, string(sym))
 		case s.InSlice(s.Replacer, int(sym)):
 			result = append(result, "-")
+		default:
+			result = append(result, string(sym))
 		}
 	}
 	return strings.Join(result, "")
