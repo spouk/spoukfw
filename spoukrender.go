@@ -112,11 +112,13 @@ func (s *SpoukRender) Render(w io.Writer, name string, data interface{}) error {
 }
 func (s *SpoukRender) AddUserFilter(name string, f interface{}) {
 	s.FIlters[name] = f
+	s.ReloadTemplate()
 }
 func (s *SpoukRender) AddFilters(stack map[string]interface{}) {
 	for k, v := range stack {
 		s.FIlters[k] = v
 	}
+	s.ReloadTemplate()
 }
 func (s *SpoukRender) ShowStack() {
 	fmt.Println(s.FIlters)
