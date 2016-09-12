@@ -66,7 +66,7 @@ func (s *SpoukRender) catcherPanic() {
 }
 func (s *SpoukRender) ReloadTemplate() {
 	defer s.catcherPanic()
-	if s.Debug {
+	if s.Debug || s.Temp == nil{
 		s.Temp = template.Must(template.New("spoukindex").Funcs(s.FIlters).ParseGlob(s.Path))
 	}
 }
@@ -86,7 +86,6 @@ func (s *SpoukRender) SpoukRenderIO(name string, data interface{}, w http.Respon
 		s.ReloadTemplate()
 	}
 	buf := new(bytes.Buffer)
-
 	if err = s.Temp.ExecuteTemplate(buf, name, data); err != nil {
 
 		log.Printf(fmt.Sprintf(ErrorRenderContent, err.Error()))
