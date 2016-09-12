@@ -56,7 +56,6 @@ func NewSpoukRender(path string, debug bool) *SpoukRender {
 	sf.Path = path
 	sf.Debug = debug
 	defer sf.catcherPanic()
-	sf.Temp = template.Must(template.New("spoukindex").Funcs(sf.FIlters).ParseGlob(sf.Path))
 	return sf
 }
 func (s *SpoukRender) catcherPanic() {
@@ -83,7 +82,7 @@ func (s *SpoukRender) HTMLTrims(body []byte) []byte {
 }
 func (s *SpoukRender) SpoukRenderIO(name string, data interface{}, w http.ResponseWriter, reloadTemplate bool) (err error) {
 	defer s.catcherPanic()
-	if reloadTemplate {
+	if reloadTemplate || s.Temp == nil{
 		s.ReloadTemplate()
 	}
 	buf := new(bytes.Buffer)
@@ -112,13 +111,11 @@ func (s *SpoukRender) Render(w io.Writer, name string, data interface{}) error {
 }
 func (s *SpoukRender) AddUserFilter(name string, f interface{}) {
 	s.FIlters[name] = f
-	s.ReloadTemplate()
 }
 func (s *SpoukRender) AddFilters(stack map[string]interface{}) {
 	for k, v := range stack {
 		s.FIlters[k] = v
 	}
-	s.ReloadTemplate()
 }
 func (s *SpoukRender) ShowStack() {
 	fmt.Println(s.FIlters)
