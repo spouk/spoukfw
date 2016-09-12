@@ -56,7 +56,7 @@ func NewSpoukRender(path string, debug bool) *SpoukRender {
 	sf.Path = path
 	sf.Debug = debug
 	defer sf.catcherPanic()
-	//sf.Temp = template.Must(template.New("spoukindex").Funcs(sf.FIlters).ParseGlob(sf.Path))
+	sf.Temp = template.Must(template.New("spoukindex").Funcs(sf.FIlters).ParseGlob(sf.Path))
 	return sf
 }
 func (s *SpoukRender) catcherPanic() {
