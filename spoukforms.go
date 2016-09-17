@@ -8,6 +8,7 @@ import (
 	"strings"
 	"fmt"
 	"log"
+	"database/sql"
 )
 
 var (
@@ -284,6 +285,28 @@ func (b *SpoukForm) ParseForm(obj interface{}) {
 		name := reflect.TypeOf(obj).Elem().Field(x).Name
 
 		switch f.Type().Kind() {
+
+		//default:
+		//	switch f.Type().String(){
+		//	case "sql.NullString" :
+		//		fmt.Print("HELLO THIS SQL NULLSTRING\n")
+		//		//val = val.(sql.NullString)
+		//		//val := strings.TrimSpace(b.MethodsForms.GetSingle(name))
+		//		//f.SetString(val)
+		//		//b.Stack[name] = val
+		//	case "sql.NullInt64":
+		//		fmt.Print("HELLO THIS sql.NulInt64\n")
+		//	}
+
+		case reflect.Struct:
+			fmt.Print("HELLO THIS reflect Struct\n")
+			value := f.Interface()
+			switch value.(type) {
+			case sql.NullString:
+				fmt.Print("HELLO THIS sql.Nullstring\n")
+			case sql.NullFloat64:
+				fmt.Print("HELLO THIS sql.Nullfloat64\n")
+			}
 
 		case reflect.Slice, reflect.Array:
 			//проводим общие для всех операции
