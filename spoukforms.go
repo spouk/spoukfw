@@ -251,9 +251,9 @@ func (b *SpoukForm)UpdateFormDeep(form interface{}) []StockValue {
 		v := mv.Field(x)
 
 		switch v.Kind() {
-		case reflect.Struct:
-
-			stockFields = append(stockFields, b.UpdateFormDeep(v.Interface())...)
+		//case reflect.Struct:
+		//
+		//	stockFields = append(stockFields, b.UpdateFormDeep(v.Interface())...)
 		default:
 			s := StockValue{}
 			name := mt.Field(x).Name
@@ -286,26 +286,13 @@ func (b *SpoukForm) ParseForm(obj interface{}) {
 
 		switch f.Type().Kind() {
 
-		//default:
-		//	switch f.Type().String(){
-		//	case "sql.NullString" :
-		//		fmt.Print("HELLO THIS SQL NULLSTRING\n")
-		//		//val = val.(sql.NullString)
-		//		//val := strings.TrimSpace(b.MethodsForms.GetSingle(name))
-		//		//f.SetString(val)
-		//		//b.Stack[name] = val
-		//	case "sql.NullInt64":
-		//		fmt.Print("HELLO THIS sql.NulInt64\n")
-		//	}
-
 		case reflect.Struct:
-			fmt.Print("HELLO THIS reflect Struct\n")
 			value := f.Interface()
+			val := strings.TrimSpace(b.MethodsForms.GetSingle(name))
+			v := sql.NullString{String:val, Valid:true}
 			switch value.(type) {
-			case sql.NullString:
-				fmt.Print("HELLO THIS sql.Nullstring\n")
-			case sql.NullFloat64:
-				fmt.Print("HELLO THIS sql.Nullfloat64\n")
+			case sql.NullString, sql.NullFloat64, sql.NullInt64:
+				b.Stack[name] = v
 			}
 
 		case reflect.Slice, reflect.Array:
