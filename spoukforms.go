@@ -353,7 +353,18 @@ func (b *SpoukForm) ParseForm(obj interface{}) {
 					b.Stack[name] = r
 				}
 			}
-
+		case reflect.Float64, reflect.Float32:
+			value := strings.TrimSpace(b.MethodsForms.GetSingle(name))
+			if value != "" {
+				r, err := strconv.ParseFloat(value, 64)
+				if err != nil {
+					log.Printf("%s", ParseErrorInt)
+					log.Printf("%s", err)
+				} else {
+					f.SetInt(r)
+					b.Stack[name] = r
+				}
+			}
 		}
 	}
 }
@@ -396,7 +407,26 @@ func (b *SpoukForm) ValidateForm(form UserForm) (status bool) {
 		default:
 			fmt.Printf("[reflect][validateform][ALERT] непроверяемый тип Name: `%v` Value: %v\n", name, f.Interface())
 
-		case reflect.Int64:
+		case reflect.Float64, reflect.Float32:
+			if ff.Tag != "" {
+				total --
+			} else {
+				result := f.Interface().(float64)
+				if result == 0 {
+					//error
+					if def != nil {
+						b.Class[name] = def.ErrorClassStyle
+						b.Errors[name] = def.ErrorMsg
+					}
+
+				} else {
+					if def != nil {
+						b.Class[name] = def.SuccessClassStyle
+					}
+					countValidate ++
+				}
+			}
+		case reflect.Int64,reflect.Int32, reflect.Int16, reflect.Int:
 			if ff.Tag != "" {
 				total --
 			} else {
