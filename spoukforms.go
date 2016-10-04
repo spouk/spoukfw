@@ -361,7 +361,7 @@ func (b *SpoukForm) ParseForm(obj interface{}) {
 					log.Printf("%s", ParseErrorInt)
 					log.Printf("%s", err)
 				} else {
-					f.SetInt(r)
+					f.SetFloat(r)
 					b.Stack[name] = r
 				}
 			}
