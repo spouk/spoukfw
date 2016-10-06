@@ -111,7 +111,7 @@ func (c *SpoukConverter) DirectStringtoInt64(v string) int64 {
 //  time convert
 //---------------------------------------------------------------------------
 func (c *SpoukConverter) ConvertHTMLDatetoUnix(date string) (int64, error) {
-	result, err := time.Parse("2006-01-01", date)
+	result, err := time.Parse("2006-01-02", date)
 	if err == nil {
 		return result.Unix(), err
 	} else {
