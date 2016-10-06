@@ -3,6 +3,7 @@ package spoukfw
 import (
 	"strconv"
 	"reflect"
+	"time"
 )
 
 const (
@@ -105,4 +106,18 @@ func (c *SpoukConverter) DirectStringtoInt64(v string) int64 {
 	} else {
 		return int64(res)
 	}
+}
+//---------------------------------------------------------------------------
+//  time convert
+//---------------------------------------------------------------------------
+func (c *SpoukConverter) ConvertHTMLDatetoUnix(date string) (int64, error) {
+	result, err := time.Parse("2006-01-01", date)
+	if err == nil {
+		return result.Unix(), err
+	} else {
+		return 0, err
+	}
+}
+func (c *SpoukConverter) ConvertUnixTimeToString(unixtime int64) string {
+	return time.Unix(unixtime, 0).String()
 }
