@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"reflect"
 	"time"
+	"strings"
 )
 
 const (
@@ -120,4 +121,15 @@ func (c *SpoukConverter) ConvertHTMLDatetoUnix(date string) (int64, error) {
 }
 func (c *SpoukConverter) ConvertUnixTimeToString(unixtime int64) string {
 	return time.Unix(unixtime, 0).String()
+}
+//convert timeUnix->HTML5Datatime_local(string)
+func (c *SpoukConverter) TimeUnixToDataLocal(unixtime int64) string {
+	tmp_result := time.Unix(unixtime,0).Format(time.RFC3339)
+	g := strings.Join(strings.SplitAfterN(tmp_result,":",3)[:2],"")
+	return g[:len(g)-1]
+}
+//convert HTML5Datatime_local(string)->TimeUnix
+func (c *SpoukConverter) DataLocalToTimeUnix(datatimeLocal string) int64 {
+	r,_ := time.Parse(time.RFC3339, datatimeLocal+":00Z")
+	return r.Unix()
 }
