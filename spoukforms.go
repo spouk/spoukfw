@@ -288,11 +288,21 @@ func (b *SpoukForm) ParseForm(obj interface{}) {
 
 		case reflect.Struct:
 			value := f.Interface()
-			val := strings.TrimSpace(b.MethodsForms.GetSingle(name))
-			v := sql.NullString{String:val, Valid:true}
+			var some interface{}
+			some = strings.TrimSpace(b.MethodsForms.GetSingle(name))
+			 
+			//v := sql.NullString{String:val, Valid:true}
 			switch value.(type) {
-			case sql.NullString, sql.NullFloat64, sql.NullInt64:
-				b.Stack[name] = v
+			//case sql.NullString:
+			//	b.Stack[name] = v
+			case sql.NullString:
+				b.Stack[name] = some.(sql.NullString).String
+			case sql.NullFloat64:
+				b.Stack[name] = some.(sql.NullFloat64).Float64
+			case sql.NullInt64:
+				b.Stack[name] = some.(sql.NullInt64).Int64
+			case sql.NullBool:
+				b.Stack[name] = some.(sql.NullBool).Bool
 			}
 
 		case reflect.Slice, reflect.Array:
