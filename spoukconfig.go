@@ -33,6 +33,7 @@ var (
 	cFG_COUNTLINKS = int64(5) //minutes
 	cFG_CSRFACTIVEMINUTE = 60 //minutes
 	cFG_CSRFSALT = "somesaltforCSRF"//minutes
+	cFG_UPLOADFilesPath = "files/"
 )
 
 type (
@@ -58,6 +59,8 @@ type (
 		//csrf
 		CSRFActiveMinute int
 		CSRFSalt         string
+		//Files download path default
+		UPLOADFilesPath  string
 		//---------------------------------------------------------------------------
 		//  проксификатор для внешнего файла конфига, реализованного в .json формате
 		//---------------------------------------------------------------------------
@@ -103,6 +106,7 @@ func NewSpoukconfig() *Spoukconfig {
 		CountOnPage:cFG_COUNTONPAGE,
 		CSRFActiveMinute:cFG_CSRFACTIVEMINUTE,
 		CSRFSalt:cFG_CSRFSALT,
+		UPLOADFilesPath:cFG_UPLOADFilesPath,
 
 	}
 	sp.logger = NewSpoukLogger(prefixLogConfig, nil)

@@ -290,7 +290,6 @@ func (b *SpoukForm) ParseForm(obj interface{}) {
 			value := f.Interface()
 			var some interface{}
 			some = strings.TrimSpace(b.MethodsForms.GetSingle(name))
-			 
 			//v := sql.NullString{String:val, Valid:true}
 			switch value.(type) {
 			//case sql.NullString:

@@ -8,6 +8,7 @@ import (
 	"time"
 	"strings"
 	"fmt"
+	"encoding/json"
 )
 
 type (
@@ -18,15 +19,16 @@ type (
 		Spoukmux *Spoukmux
 	}
 )
-func (m *SpoukCarry) RealPath() string{
-	_, rp,_, _ := m.Spoukmux.router.router.LookupRoute(m.request.Method, m.request.URL.Path)
+
+func (m *SpoukCarry) RealPath() string {
+	_, rp, _, _ := m.Spoukmux.router.router.LookupRoute(m.request.Method, m.request.URL.Path)
 	return rp
 }
 
 func (m *SpoukCarry) Config() *Spoukconfig {
 	return m.Spoukmux.config
 }
-func (m *SpoukCarry) Render(name string, data interface{}) error{
+func (m *SpoukCarry) Render(name string, data interface{}) error {
 	m.Spoukmux.render.SpoukRenderIO(name, data, *m.response, m.Spoukmux.config.TemplateDebug)
 	return nil
 }
@@ -43,12 +45,26 @@ func (sr *SpoukCarry) Redirect(path string) error {
 	http.Redirect(*sr.response, sr.request, path, http.StatusFound)
 	return nil
 }
-func (sr *SpoukCarry) WriteHTML(httpcode int, text string) {
+func (sr *SpoukCarry) WriteHTML(httpcode int, text string) (error) {
 	resp := *sr.response
 	resp.Header().Set(ContentType, TextHTMLCharsetUTF8)
 	resp.WriteHeader(httpcode)
 	resp.Write([]byte(text))
-	//return nil
+	return nil
+}
+func (sr *SpoukCarry) JSONB(httpcode int, b []byte) (error) {
+	resp := *sr.response
+	resp.Header().Set(ContentType, ApplicationJavaScriptCharsetUTF8)
+	resp.WriteHeader(httpcode)
+	resp.Write(b)
+	return nil
+}
+func (sr *SpoukCarry) JSON(code int, answer interface{}) (err error) {
+	b, err := json.Marshal(answer)
+	if err != nil {
+		return err
+	}
+	return sr.JSONB(code, b)
 }
 func (sr *SpoukCarry) Set(key string, value interface{}) {
 	ctx := context.WithValue(sr.request.Context(), key, value)
