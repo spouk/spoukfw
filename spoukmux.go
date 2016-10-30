@@ -89,6 +89,21 @@ func (s *Spoukmux) Run() {
 	log.Printf(fmt.Sprintf(runInfo, s.config.Address))
 	log.Fatal(srv.ListenAndServe())
 }
+func (s *Spoukmux) RunTLS(certFile, keyFile string) {
+	//reload template для парсинга шаблонов
+	s.render.ReloadTemplate()
+	defer s.catchErrors()
+	srv := http.Server{
+		Addr:         s.config.Address,
+		Handler:      s,
+		ReadTimeout:  s.config.HTTPReadTimeout,
+		WriteTimeout: s.config.HTTPWriteTimeout,
+	}
+	log.Printf(fmt.Sprintf("[middlewares]%v\n[session] `%v`\n[sessionobject] `%v`\n", s.middlewares, s.session))
+	log.Printf(fmt.Sprintf(runInfo, s.config.Address))
+	log.Fatal(srv.ListenAndServeTLS(certFile, keyFile))
+}
+
 
 func (s *Spoukmux) AddMiddleware(mid Midfunc) {
 	s.middlewares.setStockMiddlePrefix("", mid)
