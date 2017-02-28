@@ -34,6 +34,8 @@ var (
 	cFG_CSRFACTIVEMINUTE = 60 //minutes
 	cFG_CSRFSALT = "somesaltforCSRF"//minutes
 	cFG_UPLOADFilesPath = "files/"
+	cFG_HTTP  = ":8090"
+	cFG_HTTPS = ":8091"
 )
 
 type (
@@ -43,6 +45,9 @@ type (
 		HTTPWriteTimeout time.Duration
 		//addr
 		Address          string
+		//ssl + no ssl
+		HTTP 	         string
+		HTTPS 		 string
 		//template
 		TemplatePath     string
 		TemplateDebug    bool
@@ -107,7 +112,8 @@ func NewSpoukconfig() *Spoukconfig {
 		CSRFActiveMinute:cFG_CSRFACTIVEMINUTE,
 		CSRFSalt:cFG_CSRFSALT,
 		UPLOADFilesPath:cFG_UPLOADFilesPath,
-
+		HTTP:cFG_HTTP,
+		HTTPS:cFG_HTTPS,
 	}
 	sp.logger = NewSpoukLogger(prefixLogConfig, nil)
 	return sp

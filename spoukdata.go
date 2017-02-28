@@ -54,7 +54,8 @@ var (
 
 
 	//spoukmux
-	runInfo      = "[spouk][spoukmux] server starting `%v`\n"
+	runInfoHTTP     = "[spouk][spoukmux][HTTP] server starting `%v`\n"
+	runInfoHTTPS     = "[spouk][spoukmux][HTTPS] server starting `%v`\n"
 
 	//router
 	defRouterError = "[spoukmux][router][error] `%v`"

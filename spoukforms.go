@@ -547,11 +547,11 @@ func (b *SpoukForm) ValidateForm(form UserForm) (status bool) {
 
 	//подведение итогов по валидности всей формы
 	if total == countValidate {
-		//fmt.Printf("[validateform] Total: %v   Numfield: %v   CountValidate: %v , Result: VALIDATE\n", total, numfield, countValidate)
+		fmt.Printf("[validateform] Total: %v   Numfield: %v   CountValidate: %v , Result: VALIDATE\n", total, numfield, countValidate)
 		status = true
 	} else {
 		status = false
-		//fmt.Printf("[validateform] Total: %v   Numfield: %v   CountValidate: %v , Result: NOT VALIDATE\n", total, numfield, countValidate)
+		fmt.Printf("[validateform] Total: %v   Numfield: %v   CountValidate: %v , Result: NOT VALIDATE\n", total, numfield, countValidate)
 	}
 	return
 }

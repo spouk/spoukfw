@@ -73,20 +73,20 @@ func (m *Spoukmux) StaticFiles(realpath, wwwpath string) {
 	m.router.StaticFiles(realpath, wwwpath)
 }
 func (s *Spoukmux) catchErrors() {
-	log.Printf("[spoukmux][catcher-errros]\n")
+	log.Println("[spoukmux][catcher-errros]")
 }
 func (s *Spoukmux) Run() {
 	//reload template для парсинга шаблонов
 	s.render.ReloadTemplate()
 	defer s.catchErrors()
 	srv := http.Server{
-		Addr:         s.config.Address,
+		Addr:         s.config.HTTP,
 		Handler:      s,
 		ReadTimeout:  s.config.HTTPReadTimeout,
 		WriteTimeout: s.config.HTTPWriteTimeout,
 	}
-	log.Printf(fmt.Sprintf("[middlewares]%v\n[session] `%v`\n[sessionobject] `%v`\n", s.middlewares, s.session))
-	log.Printf(fmt.Sprintf(runInfo, s.config.Address))
+	log.Printf(fmt.Sprintf("[middlewares]%v\n[session] `%v`\n", s.middlewares, s.session))
+	log.Printf(fmt.Sprintf(runInfoHTTP, s.config.HTTP))
 	log.Fatal(srv.ListenAndServe())
 }
 func (s *Spoukmux) RunTLS(certFile, keyFile string) {
@@ -94,13 +94,13 @@ func (s *Spoukmux) RunTLS(certFile, keyFile string) {
 	s.render.ReloadTemplate()
 	defer s.catchErrors()
 	srv := http.Server{
-		Addr:         s.config.Address,
+		Addr:         s.config.HTTPS,
 		Handler:      s,
 		ReadTimeout:  s.config.HTTPReadTimeout,
 		WriteTimeout: s.config.HTTPWriteTimeout,
 	}
-	log.Printf(fmt.Sprintf("[middlewares]%v\n[session] `%v`\n[sessionobject] `%v`\n", s.middlewares, s.session))
-	log.Printf(fmt.Sprintf(runInfo, s.config.Address))
+	log.Printf(fmt.Sprintf("[middlewares]%v\n[session] `%v`\n", s.middlewares, s.session))
+	log.Printf(fmt.Sprintf(runInfoHTTPS, s.config.HTTPS))
 	log.Fatal(srv.ListenAndServeTLS(certFile, keyFile))
 }
 
